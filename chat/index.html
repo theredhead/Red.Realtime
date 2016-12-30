@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>index</title>
+    <script>
+        
+        function ChatApp(messages, message, speak) {
+            var me = this;
+            
+            this.messages = messages;
+            this.message = message;
+            this.speak = speak;
+            
+            this.socket = new WebSocket('ws:chat.theredhead.nl:6502', []);
+            this.socket.onerror = function (ev) {
+                console.error(ev.error);
+            };
+            this.socket.onmessage = function (ev) {
+                console.log(ev);
+
+                var o = JSON.parse(ev.data);
+                console.log(o);
+                
+                var div = document.createElement('div');
+                div.setAttribute('class', 'message')
+                div.appendChild(document.createTextNode(o.message));
+                me.messages.appendChild(div);
+                
+            };
+            
+            this.speak.addEventListener('click', function (ev) {
+                ev.preventDefault();
+                var msg = me.message.value;
+                me.message.value = '';
+
+                me.socket.send(JSON.stringify({
+                    action: 'speak',
+                    sender: 'unknown',
+                    message: msg
+                }));
+                
+                me.message.focus();
+            }, true);
+            
+            this.message.addEventListener('keyup', function (ev) {
+                if (ev.keyCode == 13) {
+                    me.speak.click();
+                }
+            }, true);
+            return this;
+        }
+        
+        document.addEventListener('DOMContentLoaded', function (ev) {
+            window.currentApp = new ChatApp(
+                document.getElementById('messages'),
+                document.getElementById('message'),
+                document.getElementById('speak')
+            );
+        }, true);
+        
+    </script>
+</head>
+<body>
+    <div id="messages">
+        
+    </div>
+    <input type="text" id="message" /><button id="speak">Speak</button>
+</body>
+</html>

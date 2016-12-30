@@ -19,6 +19,7 @@ namespace Red.Web.Realtime
 		const int BUFFER_BYTE_SIZE = 1204 * 128;
 		private List<Frame> frames = new List<Frame>();
 		private bool isRunning = false;
+		public string ClientId { get; set; }
 		public ClientState State { get; private set; } = ClientState.Invalid;
 		private byte[] buffer;
 
@@ -54,6 +55,7 @@ namespace Red.Web.Realtime
 			byte[] requestData = new byte[numberOfBytesReceived];  
 			Array.Copy(buffer, requestData, numberOfBytesReceived);
 			HandshakeRequest request = new HandshakeRequest(requestData);
+			ClientId = request.WebSocketKey;
 			SendBytes(request.FormulateResponse());
 			State = ClientState.Open;
 
@@ -112,7 +114,7 @@ namespace Red.Web.Realtime
 
 		protected virtual void MessageReceived(string message)
 		{
-			Console.WriteLine($"> message");
+			Console.WriteLine($"{ClientId}> {message}");
 		}
 	}
 }

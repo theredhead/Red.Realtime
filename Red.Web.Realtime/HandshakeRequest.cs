@@ -10,10 +10,9 @@ namespace Red.Web.Realtime
 		internal const string CRLF = "\r\n";
 		const string WebSocketProtocolGuid = "258EAFA5-E914-47DA-95CA-C5AB0DC85B11";
 
-		private string _secWebSocketKey;
-		private string _secWebSocketVersion;
-		private string _secWebSocketExtensions;
-
+		public string WebSocketKey { get; private set; }
+		public string WebSocketVersion { get; private set; }
+		public string WebSocketExtensions { get; private set; }
 
 		class RequestHeaders : Dictionary<string, string>
 		{
@@ -36,9 +35,9 @@ namespace Red.Web.Realtime
 		public HandshakeRequest(byte[] bytes)
 		{
 			RequestHeaders headers = new RequestHeaders(bytes);
-			_secWebSocketKey = headers["Sec-WebSocket-Key"];
-			_secWebSocketVersion = headers["Sec-WebSocket-Version"];
-			_secWebSocketExtensions = headers["Sec-WebSocket-Extensions"];
+			WebSocketKey = headers["Sec-WebSocket-Key"];
+			WebSocketVersion = headers["Sec-WebSocket-Version"];
+			WebSocketExtensions = headers["Sec-WebSocket-Extensions"];
 		}
 
 		internal byte[] FormulateResponse()
@@ -46,7 +45,7 @@ namespace Red.Web.Realtime
 			string handshakeResponse = Convert.ToBase64String(
 				SHA1.Create().ComputeHash(
 					Encoding.UTF8.GetBytes(
-						_secWebSocketKey + WebSocketProtocolGuid
+						WebSocketKey + WebSocketProtocolGuid
 					)));
 			
 			Byte[] response = Encoding.UTF8.GetBytes("HTTP/1.1 101 Switching Protocols" + CRLF

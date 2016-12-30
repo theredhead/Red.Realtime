@@ -10,5 +10,4 @@ namespace RealtimeTestApp
 			return new TestClient();
 		}
 	}
-	
 }

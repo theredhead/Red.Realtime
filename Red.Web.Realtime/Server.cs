@@ -11,8 +11,8 @@ namespace Red.Web.Realtime
 		private Socket mainSocket = new Socket(SocketType.Stream, ProtocolType.Tcp);
 		private List<Client> clients = new List<Client>();
 
-		private IPAddress IP = IPAddress.Any;
-		private int port = 6502;
+		public IPAddress IP { get; set; } = IPAddress.Any;
+		public int port { get; set; } = 6502;
 
 		private bool isRunning = false;
 

@@ -10,7 +10,6 @@ namespace RealtimeTestApp
 			TestServer server = new TestServer();
 			server.Start();
 
-
 			Console.ReadLine();
 			server.Stop();
 		}
